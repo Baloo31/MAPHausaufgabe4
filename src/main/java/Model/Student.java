@@ -1,25 +1,20 @@
 package Model;
 
-import java.util.LinkedList;
 import java.util.List;
 
-public class Student extends Person {
+public class Student extends Person implements Comparable<Student>{
     private long studentId;
-    private List<Course> enrolledCourses;
-
-    private static long studentIdCounter = 0;
-
+    private List<Long> enrolledCourses;
 
     /**
      * constructor for a student
      * @param firstname : first name
      * @param lastName : last name
      */
-    public Student(String firstname, String lastName) {
+    public Student(String firstname, String lastName, List<Long> enrolledCourses, long studentId) {
         super(firstname, lastName);
-        this.enrolledCourses = new LinkedList<>();
-        this.studentId = studentIdCounter;
-        studentIdCounter++;
+        this.enrolledCourses = enrolledCourses;
+        this.studentId = studentId;
     }
 
 
@@ -33,27 +28,26 @@ public class Student extends Person {
                 "firstName=" + getFirstName() +
                 ", lastName=" + getLastName() +
                 ", studentId=" + studentId +
-                ", totalCredits=" + getTotalCredits() +
-                ", nrEnrolledCourses=" + getNumberOfCourses() +
+                ", nrEnrolledCourses=" + getEnrolledCourses() +
                 '}';
     }
 
 
     /**
      * adds a course to the list of courses of a student
-     * @param course : course to add
+     * @param courseId : course to add
      */
-    public void addCourse(Course course){
-        this.enrolledCourses.add(course);
+    public void addCourse(long courseId){
+        this.enrolledCourses.add(courseId);
     }
 
 
     /**
      * deletes a course from the list of courses of a student
-     * @param course : course to delete
+     * @param courseId : course to delete
      */
-    public void deleteCourse(Course course){
-        this.enrolledCourses.remove(course);
+    public void deleteCourse(long courseId){
+        this.enrolledCourses.remove(courseId);
     }
 
 
@@ -66,27 +60,19 @@ public class Student extends Person {
     }
 
 
-    /**
-     * returns the total credits of a student
-     * @return total credits (int)
-     */
-    public int getTotalCredits() {
-        int totalCredits = 0;
-        for (Course course : enrolledCourses){
-            totalCredits += course.getCredits();
-        }
-        return totalCredits;
-    }
-
 
     /**
      * getter for the courses a student is enrolled to
-     * @return list of courses (List<Course>)
+     * @return list of courses ids (List<Long>)
      */
-    public List<Course> getEnrolledCourses() {
+    public List<Long> getEnrolledCourses() {
         return enrolledCourses;
     }
 
+
+    public void setEnrolledCourses(List<Long> enrolledCourses) {
+        this.enrolledCourses = enrolledCourses;
+    }
 
     /**
      * getter for the number of courses a student is enrolled to
@@ -96,4 +82,11 @@ public class Student extends Person {
         return enrolledCourses.size();
     }
 
+    @Override
+    public int compareTo(Student o) {
+        if (studentId == o.getStudentId()) {
+            return 1;
+        }
+        return 0;
+    }
 }

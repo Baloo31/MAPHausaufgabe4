@@ -1,25 +1,20 @@
 package Model;
 
-import java.util.LinkedList;
 import java.util.List;
 
-public class Teacher extends Person{
+public class Teacher extends Person implements Comparable<Teacher>{
     private long teacherId;
-    private List<Course> courses;
-
-    private static long teacherIdCounter = 0;
-
+    private List<Long> courses;
 
     /**
      * constructor for a teacher
      * @param firstName : first name
      * @param lastName : last name
      */
-    public Teacher(String firstName, String lastName){
+    public Teacher(String firstName, String lastName, List<Long> courses, long teacherId){
         super(firstName, lastName);
-        this.teacherId = teacherIdCounter;
-        teacherIdCounter++;
-        this.courses = new LinkedList<>();
+        this.teacherId = teacherId;
+        this.courses = courses;
     }
 
 
@@ -33,26 +28,26 @@ public class Teacher extends Person{
                 "firstName=" + getFirstName() +
                 ", lastName=" + getLastName() +
                 ", teacherId=" + teacherId +
-                ", nrOfCourses=" + getNrOfCourses() +
+                ", courses=" + getCourses() +
                 '}';
     }
 
 
     /**
      * adds a course to the list of courses that the teacher is teaching
-     * @param course : a course that the teacher will teach
+     * @param courseId : a course that the teacher will teach
      */
-    public void addCourse(Course course){
-        courses.add(course);
+    public void addCourse(long courseId){
+        courses.add(courseId);
     }
 
 
     /**
      * deletes a course from the list of courses of the teacher
-     * @param course : a course that the teacher is teaching
+     * @param courseId : a course that the teacher is teaching
      */
-    public void deleteCourse(Course course) {
-        courses.remove(course);
+    public void deleteCourse(long courseId) {
+        courses.remove(courseId);
     }
 
 
@@ -78,8 +73,19 @@ public class Teacher extends Person{
      * getter for the courses of a teacher
      * @return list of courses (List<Courses>)
      */
-    public List<Course> getCourses() {
+    public List<Long> getCourses() {
         return courses;
     }
 
+    public void setCourses(List<Long> courses) {
+        this.courses = courses;
+    }
+
+    @Override
+    public int compareTo(Teacher o) {
+        if (teacherId == o.getTeacherId()) {
+            return 1;
+        }
+        return 0;
+    }
 }

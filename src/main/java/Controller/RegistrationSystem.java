@@ -1,5 +1,6 @@
 package Controller;
 
+import Exceptions.*;
 import Model.Course;
 import Model.Student;
 import Model.Teacher;
@@ -7,130 +8,197 @@ import Repository.CourseRepository;
 import Repository.StudentRepository;
 import Repository.TeacherRepository;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-
-/**
- * Registration System
- */
 public class RegistrationSystem {
     private CourseRepository courseRepo;
     private StudentRepository studentRepo;
     private TeacherRepository teacherRepo;
 
-    /**
-     * Default constructor
-     */
-    public RegistrationSystem(){
-        courseRepo = new CourseRepository();
-        studentRepo = new StudentRepository();
-        teacherRepo = new TeacherRepository();
+    public RegistrationSystem(String coursesFile, String studentsFile, String teacherFile){
+        studentRepo = new StudentRepository(studentsFile);
+        teacherRepo = new TeacherRepository(teacherFile);
+        courseRepo = new CourseRepository(coursesFile);
     }
 
 
-    /**
-     * registration system constructor
-     * @param courseRepo : course repository
-     * @param studentRepo : student repository
-     * @param teacherRepo : teacher repository
-     */
-    public RegistrationSystem(CourseRepository courseRepo, StudentRepository studentRepo, TeacherRepository teacherRepo){
-        this.courseRepo = courseRepo;
-        this.studentRepo = studentRepo;
-        this.teacherRepo = teacherRepo;
-    }
-
-
-    /**
-     * registers a student to a course with free places
-     * @param course : the course
-     * @param student : the student to register
-     * @return true, if the registration was successful
-     * else, false.
-     */
-    public boolean register(Course course, Student student){
-        if ((course.getNumberOfStudents() < course.getMaxEnrollment()) &&
-                (student.getTotalCredits() + course.getCredits() <= 30)){
-            course.addStudent(student);
-            student.addCourse(course);
-            return true;
-        }
-        return false;
-    }
-
-
-    /**
-     * retrieves all courses with free places
-     * @return the courses (List<course>)
-     */
-    public List<Course> retrieveCoursesWithFreePlaces(){
-        List<Course> coursesWithFreePlaces = new LinkedList<>();
-        for (Course course : courseRepo.getAll()){
-            if (course.getNumberOfStudents() < course.getMaxEnrollment()){
-                coursesWithFreePlaces.add(course);
+    public void register(long courseId, long studentId) throws ElementDoesNotExistException, MaxCreditsSurpassedException, MaxEnrollmentSurpassedException, AlreadyExistsException {
+        int studentIndex = -1;
+        for (int idx = 0; idx < studentRepo.getAll().size(); idx++){
+            if (studentRepo.getAll().get(idx).getStudentId() == studentId) {
+                studentIndex = idx;
+                break;
             }
         }
-        return coursesWithFreePlaces;
+
+        int courseIndex = -1;
+        for (int idx = 0; idx < courseRepo.getAll().size(); idx++){
+            if (courseRepo.getAll().get(idx).getCourseId() == courseId) {
+                courseIndex = idx;
+                break;
+            }
+        }
+
+        if ((courseIndex == -1) || (studentIndex == -1)){
+            throw new ElementDoesNotExistException("The Course or the Student could not be found !");
+        }
+
+        Course course = courseRepo.getAll().get(courseIndex);
+        Student student = studentRepo.getAll().get(studentIndex);
+
+        if (course.getStudentsEnrolled().contains(studentId)){
+            throw new AlreadyExistsException("Student was already registered to this course !");
+        }
+
+        if (calculateStudentCredits(student) + course.getCredits() > 30){
+            throw new MaxCreditsSurpassedException("The credits will be over 30 by adding this course !");
+        }
+
+        if (course.getNumberOfStudents() >= course.getMaxEnrollment()) {
+            throw new MaxEnrollmentSurpassedException("The course is full !");
+        }
+
+        course.addStudent(studentId);
+        student.addCourse(courseId);
+
+        courseRepo.update(course);
+        studentRepo.update(student);
     }
 
 
-    /**
-     * retrieves the students enrolled for a specific course
-     * @param course : the course
-     * @return the students enrolled for this course (List<Student>)
-     */
-    public List<Student> retrieveStudentsEnrolledForACourse(Course course){
-        return course.getStudentsEnrolled();
+    public List<Course> retrieveCoursesWithFreePlaces(){
+        List<Course> freePlacesCourses = new LinkedList<>();
+        for (Course course : courseRepo.getAll()){
+            if (course.getMaxEnrollment() > course.getNumberOfStudents()){
+                freePlacesCourses.add(course);
+            }
+        }
+        return freePlacesCourses;
     }
 
 
-    /**
-     * @return all courses that exist, even the ones without free places
-     */
-    public List<Course> getAllCourses(){
+    public List<Student> retrieveStudentsEnrolledForACourse(long courseId){
+        List<Student> studentsEnrolledForTheCourse = new LinkedList<>();
+        for (Student student : studentRepo.getAll()){
+            if (student.getEnrolledCourses().contains(courseId)){
+                studentsEnrolledForTheCourse.add(student);
+            }
+        }
+        return studentsEnrolledForTheCourse;
+    }
+
+
+    public List<Course> getAllCourses() {
         return courseRepo.getAll();
     }
 
 
-    /**
-     * a teacher deletes a course he is teaching
-     * Pre: a teacher and a course he is teaching
-     * Post: the course is deleted, and the credits of all enrolled students updated
-     */
-    public void deleteCourse(Teacher teacher, Course course){
-        if (course.getTeacher().getTeacherId() == teacher.getTeacherId()) {
-            teacher.deleteCourse(course);
-
-            for (Student student : course.getStudentsEnrolled()) {
-                student.deleteCourse(course);
+    public void deleteTeacherCourse(long courseId, long teacherId) throws ElementDoesNotExistException, NotTeachingTheCourseException {
+        int teacherIndex = -1;
+        for (int idx = 0; idx < teacherRepo.getAll().size(); idx++){
+            if (teacherRepo.getAll().get(idx).getTeacherId() == teacherId) {
+                teacherIndex = idx;
+                break;
             }
+        }
 
-            course = null;
+        int courseIndex = -1;
+        for (int idx = 0; idx < courseRepo.getAll().size(); idx++){
+            if (courseRepo.getAll().get(idx).getCourseId() == courseId) {
+                courseIndex = idx;
+                break;
+            }
+        }
+
+        if ((courseIndex == -1) || (teacherIndex == -1)){
+            throw new ElementDoesNotExistException("The Course or the Teacher could not be found !");
+        }
+
+        Course course = courseRepo.getAll().get(courseIndex);
+        Teacher teacher = teacherRepo.getAll().get(teacherIndex);
+
+        if (course.getTeacher() != teacherId) {
+            throw new NotTeachingTheCourseException("Course is not teached by this teacher !");
+        }
+
+
+        for (long studentId : course.getStudentsEnrolled()){
+            for (Student student : studentRepo.getAll()){
+                if (student.getStudentId() == studentId) {
+                    student.deleteCourse(courseId);
+                    studentRepo.update(student);
+                }
+            }
+        }
+
+        teacher.deleteCourse(courseId);
+        teacherRepo.update(teacher);
+
+        courseRepo.delete(course);
+
+    }
+
+
+    public void addTeacher(){
+    }
+
+
+    public int calculateStudentCredits(Student student){
+        int nrCredits = 0;
+        for (long courseId : student.getEnrolledCourses()){
+            for (Course course : courseRepo.getAll()) {
+                if (course.getCourseId() == courseId) {
+                    nrCredits += course.getCredits();
+                }
+            }
+        }
+        return nrCredits;
+    }
+
+
+    public void readAllData(){
+        try {
+            studentRepo.readData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            teacherRepo.readData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            courseRepo.readData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+    public void writeAllData(){
+        try {
+            studentRepo.writeData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            teacherRepo.writeData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            courseRepo.writeData();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-
-    /**
-     * @return course repository
-     */
-    public CourseRepository getCourseRepo() {
-        return courseRepo;
-    }
-
-
-    /**
-     * @return student repository
-     */
-    public StudentRepository getStudentRepo() {
-        return studentRepo;
-    }
-
-
-    /**
-     * @return teacher repository
-     */
-    public TeacherRepository getTeacherRepo() {
-        return teacherRepo;
-    }
 }

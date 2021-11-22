@@ -1,34 +1,31 @@
 package Model;
 
-import java.util.LinkedList;
 import java.util.List;
 
-public class Course {
+public class Course implements Comparable<Course>{
     private String name;
-    private Teacher teacher;
+    private long teacherId;
     private int maxEnrollment;
-    private List<Student> studentsEnrolled;
+    private List<Long> studentsEnrolled;
     private int credits;
     private long courseId;
-    private static long courseIdCounter = 0;
 
 
     /**
      * constructor for a course
      * @param name : name of a course
-     * @param teacher : name of the teacher teaching the course
+     * @param teacherId : name of the teacher teaching the course
      * @param maxEnrollment : maximum number of students that can join the course
      * @param credits : course credits
      */
-    public Course(String name, Teacher teacher, int maxEnrollment, int credits){
+    public Course(String name, long teacherId, int maxEnrollment, int credits, long courseId, List<Long> students){
         this.name = name;
-        this.teacher = teacher;
+        this.teacherId = teacherId;
         this.maxEnrollment = maxEnrollment;
-        this.studentsEnrolled = new LinkedList<>();
+        this.studentsEnrolled = students;
         this.credits = credits;
-        this.courseId = courseIdCounter;
-        courseIdCounter++;
-        teacher.addCourse(this);
+        this.courseId = courseId;
+        // addTeacherCourse(teacherId, courseId);
     }
 
 
@@ -40,9 +37,9 @@ public class Course {
     public String toString() {
         return "Course{" +
                 "name='" + name + '\'' +
-                ", teacher=" + teacher +
+                ", teacher=" + teacherId +
                 ", maxEnrollment=" + maxEnrollment +
-                ", nrEnrolledStudents=" + getNumberOfStudents() +
+                ", enrolledStudents=" + studentsEnrolled +
                 ", credits=" + credits +
                 ", courseId=" + courseId +
                 '}';
@@ -53,7 +50,7 @@ public class Course {
      * adds a student to the list of enrolled students
      * @param student : student to add
      */
-    public void addStudent(Student student) {
+    public void addStudent(long student) {
         studentsEnrolled.add(student);
     }
 
@@ -62,7 +59,7 @@ public class Course {
      * deletes a student from the list of enrolled students
      * @param student : student to delete
      */
-    public void deleteStudent(Student student) {
+    public void deleteStudent(long student) {
         studentsEnrolled.remove(student);
     }
 
@@ -98,19 +95,19 @@ public class Course {
      * getter for the teacher of a course
      * @return Teacher
      */
-    public Teacher getTeacher() {
-        return teacher;
+    public long getTeacher() {
+        return teacherId;
     }
 
 
     /**
      * setter for the teacher of a course
-     * @param teacher : teacher that teaches the course
+     * @param teacherId : teacher that teaches the course
      */
-    public void setTeacher(Teacher teacher) {
-        this.teacher.deleteCourse(this);
-        this.teacher = teacher;
-        this.teacher.addCourse(this);
+    public void setTeacher(long teacherId) {
+        //deleteTeacherCourse(this.teacherId, courseId);
+        this.teacherId = teacherId;
+        //addTeacherCourse(teacherId, courseId);
     }
 
 
@@ -156,10 +153,13 @@ public class Course {
      * getter for the students enrolled to a course
      * @return the list of students (List<Student>)
      */
-    public List<Student> getStudentsEnrolled() {
+    public List<Long> getStudentsEnrolled() {
         return studentsEnrolled;
     }
 
+    public void setStudentsEnrolled(List<Long> studentsEnrolled) {
+        this.studentsEnrolled = studentsEnrolled;
+    }
 
     /**
      * getter for the course id
@@ -167,5 +167,13 @@ public class Course {
      */
     public long getCourseId() {
         return courseId;
+    }
+
+    @Override
+    public int compareTo(Course o) {
+        if (courseId == o.getCourseId()) {
+            return 1;
+        }
+        return 0;
     }
 }
