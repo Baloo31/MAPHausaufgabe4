@@ -141,9 +141,61 @@ public class RegistrationSystem {
     }
 
 
-    public void addTeacher(){
+    public void addTeacher(String firstName, String lastName, long teacherId) throws AlreadyExistsException {
+        for (Teacher teacher : teacherRepo.getAll()){
+            if (teacher.getTeacherId() == teacherId){
+                throw new AlreadyExistsException("Teacher already exists !");
+            }
+        }
+        teacherRepo.create(new Teacher(firstName, lastName, new LinkedList<>(), teacherId));
     }
 
+    /*
+    public boolean deleteTeacher(long teacherId){
+        for (Teacher teacher : teacherRepo.getAll()) {
+            if (teacher.getTeacherId() == teacherId) {
+                teacherRepo.delete(teacher);
+                return true;
+            }
+        }
+        return false;
+    }
+     */
+
+    public void addStudent(String firstName, String lastName, long studentId) throws AlreadyExistsException {
+        for (Student student : studentRepo.getAll()){
+            if (student.getStudentId() == studentId){
+                throw new AlreadyExistsException("Student already exists !");
+            }
+        }
+        studentRepo.create(new Student(firstName, lastName, new LinkedList<>(), studentId));
+    }
+
+    public void addCourse(String name, long teacherId, int maxEnrollment, int credits, long courseId) throws AlreadyExistsException, ElementDoesNotExistException {
+        for (Course course : courseRepo.getAll()) {
+            if (course.getCourseId() == courseId) {
+                throw new AlreadyExistsException("Course already exists !");
+            }
+        }
+
+        int teacherIndex = -1;
+        for (int idx = 0; idx < teacherRepo.getAll().size(); idx++){
+            if (teacherRepo.getAll().get(idx).getTeacherId() == teacherId) {
+                teacherIndex = idx;
+                break;
+            }
+        }
+
+        if (teacherIndex == -1) {
+            throw new ElementDoesNotExistException("The specified Teacher does not exist !");
+        }
+
+        Teacher teacher = teacherRepo.getAll().get(teacherIndex);
+        teacher.addCourse(courseId);
+        teacherRepo.update(teacher);
+
+        courseRepo.create(new Course(name, teacherId, maxEnrollment, credits, courseId, new LinkedList<>()));
+    }
 
     public int calculateStudentCredits(Student student){
         int nrCredits = 0;
@@ -183,6 +235,12 @@ public class RegistrationSystem {
 
     public void writeAllData(){
         try {
+            courseRepo.writeData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
             studentRepo.writeData();
         } catch (IOException e) {
             e.printStackTrace();
@@ -190,12 +248,6 @@ public class RegistrationSystem {
 
         try {
             teacherRepo.writeData();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            courseRepo.writeData();
         } catch (IOException e) {
             e.printStackTrace();
         }

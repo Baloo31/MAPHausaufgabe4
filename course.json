@@ -1,1 +1,9 @@
-[]
+[ {
+  "name" : "Analiza Matematica",
+  "maxEnrollment" : 100,
+  "studentsEnrolled" : [ 1, 2 ],
+  "credits" : 6,
+  "courseId" : 1,
+  "numberOfStudents" : 2,
+  "teacher" : 1
+} ]

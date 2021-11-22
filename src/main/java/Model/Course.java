@@ -25,7 +25,6 @@ public class Course implements Comparable<Course>{
         this.studentsEnrolled = students;
         this.credits = credits;
         this.courseId = courseId;
-        // addTeacherCourse(teacherId, courseId);
     }
 
 
@@ -37,7 +36,7 @@ public class Course implements Comparable<Course>{
     public String toString() {
         return "Course{" +
                 "name='" + name + '\'' +
-                ", teacher=" + teacherId +
+                ", teacherId=" + teacherId +
                 ", maxEnrollment=" + maxEnrollment +
                 ", enrolledStudents=" + studentsEnrolled +
                 ", credits=" + credits +

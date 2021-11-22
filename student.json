@@ -1,1 +1,13 @@
-[]
+[ {
+  "firstName" : "Andrei",
+  "lastName" : "Balu",
+  "studentId" : 1,
+  "enrolledCourses" : [ 1 ],
+  "numberOfCourses" : 1
+}, {
+  "firstName" : "Gabriel",
+  "lastName" : "Moldovan",
+  "studentId" : 2,
+  "enrolledCourses" : [ 1 ],
+  "numberOfCourses" : 1
+} ]

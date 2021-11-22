@@ -31,7 +31,7 @@ public class CourseRepository extends InMemoryRepository<Course> implements File
 
         for (JsonNode node : parser){
             String name = node.path("name").asText();
-            long teacherId = node.path("teacherId").asLong();
+            long teacherId = node.path("teacher").asLong();
             int  maxEnrollment = node.path("maxEnrollment").asInt();
             int credits = node.path("credits").asInt();
             long courseId = node.path("courseId").asLong();
