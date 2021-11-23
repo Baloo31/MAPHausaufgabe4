@@ -9,6 +9,7 @@ import Repository.StudentRepository;
 import Repository.TeacherRepository;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -208,6 +209,37 @@ public class RegistrationSystem {
         }
         return nrCredits;
     }
+
+    public List<Student> retrieveAllStudents(){
+        return studentRepo.getAll();
+    }
+
+    public List<Teacher> retrieveAllTeachers(){
+        return teacherRepo.getAll();
+    }
+
+    public List<Student> sortStudentsById(){
+        List<Student> students = studentRepo.getAll();
+        Comparator<Student> studentComparator = Comparator.comparing(Student::getStudentId);
+        return students.stream().sorted(studentComparator).toList();
+    }
+
+    public List<Course> sortCoursesByName(){
+        List<Course> courses = courseRepo.getAll();
+        Comparator<Course> courseComparator = Comparator.comparing(Course::getName);
+        return courses.stream().sorted(courseComparator).toList();
+    }
+
+    public List<Student> filterStudentsEnrolled(){
+        List<Student> students = studentRepo.getAll();
+        return students.stream().filter(stud -> stud.getNumberOfCourses() > 0).toList();
+    }
+
+    public List<Course> filterCoursesWithStudents(){
+        List<Course> courses = courseRepo.getAll();
+        return courses.stream().filter(course -> course.getNumberOfStudents() > 0).toList();
+    }
+
 
 
     public void readAllData(){

@@ -2,6 +2,6 @@
   "firstName" : "Radu",
   "lastName" : "Dragan",
   "teacherId" : 1,
-  "courses" : [ 1 ],
-  "nrOfCourses" : 1
+  "courses" : [ 1, 2 ],
+  "nrOfCourses" : 2
 } ]

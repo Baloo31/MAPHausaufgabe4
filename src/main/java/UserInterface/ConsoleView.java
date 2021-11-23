@@ -3,6 +3,8 @@ package UserInterface;
 import Controller.RegistrationSystem;
 import Exceptions.*;
 import Model.Course;
+import Model.Student;
+import Model.Teacher;
 
 import java.util.Scanner;
 
@@ -22,7 +24,7 @@ public class ConsoleView {
             this.showMenu();
             System.out.print("Please choose an Option : ");
             option = inputScanner.nextInt();
-            if (option > 7 || option < 0){
+            if (option > 13 || option < 0){
                 System.out.println("This Option does not exist, please try again !");
             }
 
@@ -40,6 +42,18 @@ public class ConsoleView {
                 this.retrieveAll();
             } else if (option == 7) {
                 this.teacherDeleteCourse();
+            } else if (option == 8) {
+                this.showAllTeachers();
+            } else if (option == 9) {
+                this.showAllStudents();
+            } else if (option == 10) {
+                this.showStudentsSortedById();
+            } else if (option == 11) {
+                this.showCoursesSortedByName();
+            } else if (option == 12) {
+                this.filterStudentsEnrolled();
+            } else if (option == 13) {
+                this.filterCoursesWithStudents();
             }
         }
         registrationSystem.writeAllData();
@@ -169,6 +183,42 @@ public class ConsoleView {
         }
     }
 
+    public void showAllTeachers(){
+        for (Teacher teacher : registrationSystem.retrieveAllTeachers()){
+            System.out.println(teacher);
+        }
+    }
+
+    public void showAllStudents(){
+        for (Student student : registrationSystem.retrieveAllStudents()){
+            System.out.println(student);
+        }
+    }
+
+    public void showStudentsSortedById(){
+        for (Student student : registrationSystem.sortStudentsById()){
+            System.out.println(student);
+        }
+    }
+
+    public void showCoursesSortedByName(){
+        for (Course course : registrationSystem.sortCoursesByName()){
+            System.out.println(course);
+        }
+    }
+
+    public void filterStudentsEnrolled(){
+        for (Student student : registrationSystem.filterStudentsEnrolled()){
+            System.out.println(student);
+        }
+    }
+
+    public void filterCoursesWithStudents(){
+        for (Course course : registrationSystem.filterCoursesWithStudents()){
+            System.out.println(course);
+        }
+    }
+
     public void showMenu(){
         System.out.print("""
                 0. Exit\s
@@ -178,7 +228,13 @@ public class ConsoleView {
                 4. Register a student to a course\s
                 5. Retrieve courses with free places\s
                 6. Retrieve all available courses\s
-                7. Delete a Teachers course
+                7. Delete a Teachers course\s
+                8. Show all teachers\s
+                9. Show all students\s
+                10. Show students sorted by id\s
+                11. Show courses sorted by name\s
+                12. Filter students enrolled for at least a course\s
+                13. Filter courses with at least one student enrolled for
                 """);
     }
 }

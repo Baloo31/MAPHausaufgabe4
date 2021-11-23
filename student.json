@@ -10,4 +10,16 @@
   "studentId" : 2,
   "enrolledCourses" : [ 1 ],
   "numberOfCourses" : 1
+}, {
+  "firstName" : "George",
+  "lastName" : "Ioan",
+  "studentId" : 4,
+  "enrolledCourses" : [ ],
+  "numberOfCourses" : 0
+}, {
+  "firstName" : "Mihai",
+  "lastName" : "Zamfir",
+  "studentId" : 3,
+  "enrolledCourses" : [ ],
+  "numberOfCourses" : 0
 } ]

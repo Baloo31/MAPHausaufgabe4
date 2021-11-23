@@ -6,4 +6,12 @@
   "courseId" : 1,
   "numberOfStudents" : 2,
   "teacher" : 1
+}, {
+  "name" : "Algebra",
+  "maxEnrollment" : 90,
+  "studentsEnrolled" : [ ],
+  "credits" : 6,
+  "courseId" : 2,
+  "numberOfStudents" : 0,
+  "teacher" : 1
 } ]
