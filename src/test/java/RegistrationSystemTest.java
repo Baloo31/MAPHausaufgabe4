@@ -316,11 +316,11 @@ class RegistrationSystemTest {
 
     @Test
     void sortStudentsById() {
-        List<Student> studetsSortedById = registrationSystem.sortStudentsById();
+        List<Student> studentsSortedById = registrationSystem.sortStudentsById();
 
         // check if the students were sorted ascending by their id
         long prevId = -1;
-        for (Student student : studetsSortedById){
+        for (Student student : studentsSortedById){
             if (student.getStudentId() < prevId){
                 fail();
             }
@@ -330,7 +330,6 @@ class RegistrationSystemTest {
     @Test
     void sortCoursesByName() {
         List<Course> coursesSortedByName = registrationSystem.sortCoursesByName();
-        System.out.println(coursesSortedByName);
 
         // correct order of the courses
         assertEquals(3, coursesSortedByName.get(0).getCourseId());
@@ -364,7 +363,6 @@ class RegistrationSystemTest {
         }
 
         studentsEnrolled = registrationSystem.filterStudentsEnrolled();
-        System.out.println(studentsEnrolled);
         assertEquals(6, studentsEnrolled.size());
 
     }
