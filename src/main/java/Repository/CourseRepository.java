@@ -1,7 +1,6 @@
 package Repository;
 
 import Model.Course;
-import Model.Student;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,12 +17,22 @@ public class CourseRepository extends InMemoryRepository<Course> implements File
     private ObjectMapper objectMapper;
     private String fileName;
 
+    /**
+     * Writes the data (courses) to a json file
+     * @throws IOException if writing did not work
+     */
     @Override
     public void writeData() throws IOException {
         ObjectWriter writer = objectMapper.writer(new DefaultPrettyPrinter());
         writer.writeValue(new File(fileName), repoList);
     }
 
+
+    /**
+     * Reads the data from the json file that stores the courses
+     * @return the extracted courses
+     * @throws IOException if input was wrong
+     */
     @Override
     public List<Course> readData() throws IOException {
         Reader reader = new BufferedReader(new FileReader(fileName));

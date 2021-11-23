@@ -8,17 +8,31 @@ import Model.Teacher;
 
 import java.util.Scanner;
 
+/**
+ * User interface
+ */
 public class ConsoleView {
     private RegistrationSystem registrationSystem;
     private Scanner inputScanner;
 
+
+    /**
+     * Constructor for the user interface
+     */
     public ConsoleView() {
         registrationSystem = new RegistrationSystem("course.json", "student.json", "teacher.json");
         inputScanner = new Scanner(System.in);
     }
 
+
+    /**
+     * Starts the application (the option menu)
+     */
     public void start(){
+
+        // data from json files is read
         registrationSystem.readAllData();
+
         int option = -1;
         while (option != 0) {
             this.showMenu();
@@ -56,10 +70,17 @@ public class ConsoleView {
                 this.filterCoursesWithStudents();
             }
         }
+
+        // The new data is written to the json files
         registrationSystem.writeAllData();
+
         System.out.println("The Application was closed !\s");
     }
 
+
+    /**
+     * gets from user the input for adding a student
+     */
     public void addStudent() {
         inputScanner.nextLine();
 
@@ -80,6 +101,10 @@ public class ConsoleView {
         }
     }
 
+
+    /**
+     * gets from user the input for adding a teacher
+     */
     public void addTeacher(){
         inputScanner.nextLine();
 
@@ -100,6 +125,10 @@ public class ConsoleView {
         }
     }
 
+
+    /**
+     * gets from user the input for adding a course
+     */
     public void addCourse(){
         inputScanner.nextLine();
 
@@ -129,6 +158,10 @@ public class ConsoleView {
         }
     }
 
+
+    /**
+     * gets from user the input for registering a student to a course
+     */
     public void register(){
         inputScanner.nextLine();
 
@@ -152,18 +185,29 @@ public class ConsoleView {
         }
     }
 
+
+    /**
+     * shows the courses with free places
+     */
     public void retrieveFree(){
         for (Course course : registrationSystem.retrieveCoursesWithFreePlaces()){
             System.out.println(course);
         }
     }
 
+    /**
+     * shows all courses
+     */
     public void retrieveAll(){
         for (Course course : registrationSystem.getAllCourses()){
             System.out.println(course);
         }
     }
 
+
+    /**
+     * gets from user the input for deleting a course
+     */
     public void teacherDeleteCourse(){
         inputScanner.nextLine();
 
@@ -183,42 +227,70 @@ public class ConsoleView {
         }
     }
 
+
+    /**
+     * shows all teachers
+     */
     public void showAllTeachers(){
         for (Teacher teacher : registrationSystem.retrieveAllTeachers()){
             System.out.println(teacher);
         }
     }
 
+
+    /**
+     * shows all students
+     */
     public void showAllStudents(){
         for (Student student : registrationSystem.retrieveAllStudents()){
             System.out.println(student);
         }
     }
 
+
+    /**
+     * shows all students sorted ascending by their id
+     */
     public void showStudentsSortedById(){
         for (Student student : registrationSystem.sortStudentsById()){
             System.out.println(student);
         }
     }
 
+
+    /**
+     * shows all courses sorted alphabetically by their name
+     */
     public void showCoursesSortedByName(){
         for (Course course : registrationSystem.sortCoursesByName()){
             System.out.println(course);
         }
     }
 
+
+    /**
+     * filters the students enrolled for at least one course
+     */
     public void filterStudentsEnrolled(){
         for (Student student : registrationSystem.filterStudentsEnrolled()){
             System.out.println(student);
         }
     }
 
+
+    /**
+     * filters the courses with at least one student enrolled for
+     */
     public void filterCoursesWithStudents(){
         for (Course course : registrationSystem.filterCoursesWithStudents()){
             System.out.println(course);
         }
     }
 
+
+    /**
+     * shows the user menu
+     */
     public void showMenu(){
         System.out.print("""
                 0. Exit\s

@@ -70,9 +70,16 @@ public class Student extends Person implements Comparable<Student>{
     }
 
 
+
+    /**
+     *setter for the courses a student is enrolled to
+     * @param enrolledCourses list of courses ids
+     */
     public void setEnrolledCourses(List<Long> enrolledCourses) {
         this.enrolledCourses = enrolledCourses;
     }
+
+
 
     /**
      * getter for the number of courses a student is enrolled to

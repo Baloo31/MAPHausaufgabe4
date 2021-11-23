@@ -28,12 +28,23 @@ public class StudentRepository extends InMemoryRepository<Student> implements Fi
         this.fileName = fileName;
     }
 
+
+    /**
+     * Writes the data (students) to a json file
+     * @throws IOException if writing did not work
+     */
     @Override
     public void writeData() throws IOException {
         ObjectWriter writer = objectMapper.writer(new DefaultPrettyPrinter());
         writer.writeValue(new File(fileName), repoList);
     }
 
+
+    /**
+     * Reads the data from the json file that stores the students
+     * @return the extracted students
+     * @throws IOException if input was wrong
+     */
     @Override
     public List<Student> readData() throws IOException {
         Reader reader = new BufferedReader(new FileReader(fileName));

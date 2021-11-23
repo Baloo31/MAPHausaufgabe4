@@ -17,12 +17,23 @@ public class TeacherRepository extends InMemoryRepository<Teacher> implements Fi
     private ObjectMapper objectMapper;
     private String fileName;
 
+
+    /**
+     * Writes the data (teachers) to a json file
+     * @throws IOException if writing did not work
+     */
     @Override
     public void writeData() throws IOException {
         ObjectWriter writer = objectMapper.writer(new DefaultPrettyPrinter());
         writer.writeValue(new File(fileName), repoList);
     }
 
+
+    /**
+     * Reads the data from the json file that stores the teachers
+     * @return the extracted teachers
+     * @throws IOException if input was wrong
+     */
     @Override
     public List<Teacher> readData() throws IOException {
         Reader reader = new BufferedReader(new FileReader(fileName));

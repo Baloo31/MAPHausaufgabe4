@@ -10,6 +10,11 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ *
+ * Tests the registration system
+ *
+ */
 class RegistrationSystemTest {
     private RegistrationSystem registrationSystem;
 

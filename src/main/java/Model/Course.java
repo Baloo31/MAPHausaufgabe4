@@ -149,13 +149,18 @@ public class Course implements Comparable<Course>{
 
 
     /**
-     * getter for the students enrolled to a course
+     * getter for the students enrolled for a course
      * @return the list of students (List<Student>)
      */
     public List<Long> getStudentsEnrolled() {
         return studentsEnrolled;
     }
 
+
+    /**
+     * setter fot the students enrolled for a course
+     * @param studentsEnrolled list of students ids
+     */
     public void setStudentsEnrolled(List<Long> studentsEnrolled) {
         this.studentsEnrolled = studentsEnrolled;
     }

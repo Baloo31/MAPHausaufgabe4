@@ -77,9 +77,15 @@ public class Teacher extends Person implements Comparable<Teacher>{
         return courses;
     }
 
+
+    /**
+     * setter for the courses a teacher is teaching
+     * @param courses list of courses ids
+     */
     public void setCourses(List<Long> courses) {
         this.courses = courses;
     }
+
 
     @Override
     public int compareTo(Teacher o) {
